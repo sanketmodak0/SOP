@@ -67,6 +67,7 @@ class Solver {
 		int thread_id;
 		static vector<unsigned long int> enumerated_nodes;
 		static vector<unsigned long int> bound_calculations;
+		static bool compare(const pair<int, int>&i, const pair<int, int>&j);
 };
 
 struct {

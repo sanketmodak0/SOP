@@ -102,25 +102,25 @@ void Solver::solve_sop_parallel(int num_threads){
 		    solution.push_back(Edge(i, i, 0));
 		    reset_solution(SolverState(Edge(i, i, 0), vector<Edge>(1, Edge(i, i, 0)), 0, 0));
 
-			vector<pair<int,Edge>> neighbour_lower_bounds;
-			for(const Edge& e : cost_graph->adj_outgoing(i)){
-				if(valid_node(e.dest)){
-				    neighbour_lower_bounds.push(get_lower_bound(0, vector<Edge>(1, Edge(i, i, 0)), visited_nodes), e);
-			    }
-		    }
-			std::sort(neighbour_lower_bounds.begin(), neighbour_lower_bounds.end(), compare);
-			int size_of_neighbours_lower_vector = neighbour_lower_bounds.size();
-			int k = 0;
-			while(k<size_of_neighbours_lower_vector){
-				first_visits.push(SolverState(neighbour_lower_bounds[k].second, vector<Edge>(1, Edge(i, i, 0)), 0, neighbour_lower_bounds[k].first));
-				k++;
-			}
-
-		    // for(const Edge& e : cost_graph->adj_outgoing(i)){
-			//     if(valid_node(e.dest)){
-			// 	    first_visits.push(SolverState(e, vector<Edge>(1, Edge(i, i, 0)), 0, static_lower_bound));
+			// vector<pair<int,Edge>> neighbour_lower_bounds;
+			// for(const Edge& e : cost_graph->adj_outgoing(i)){
+			// 	if(valid_node(e.dest)){
+			// 	    neighbour_lower_bounds.push_back(get_lower_bound(0, e.dest, visited_nodes), e);
 			//     }
 		    // }
+			// std::sort(neighbour_lower_bounds.begin(), neighbour_lower_bounds.end(), compare);
+			// int size_of_neighbours_lower_vector = neighbour_lower_bounds.size();
+			// int k = 0;
+			// while(k<size_of_neighbours_lower_vector){
+			// 	first_visits.push(SolverState(neighbour_lower_bounds[k].second, vector<Edge>(1, Edge(i, i, 0)), 0, neighbour_lower_bounds[k].first));
+			// 	k++;
+			// }
+
+		    for(const Edge& e : cost_graph->adj_outgoing(i)){
+			    if(valid_node(e.dest)){
+				    first_visits.push(SolverState(e, vector<Edge>(1, Edge(i, i, 0)), 0, get_lower_bound(0, e.dest, visited_nodes)));
+			    }
+		    }
 		    if(!first_visits.empty()){
 			    vector<thread> solver_threads(thread_count);
 			    vector<Solver> solvers;
